@@ -18,9 +18,11 @@ $$
 & <exp>::= ('e'|'E')\ ['-' | '+']\ [0-9]^{+}
 \end{split} 
 $$
-The Cauchy-Schwarz Inequality
-
-$$\left( \sum_{k=1}^n a_k b_k \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right)$$
+$$\begin{aligned}
+P(X>n) &= P\biggl(\bigcup_{1\leq i\leq n} A_{n,i}\biggr)\\
+&=\sum_{1\leq i\leq n}P(A_{n,i}) - \sum_{1\leq i < j\leq n}P(A_{n,i}\cap A_{n,j}) + \sum_{1\leq i < j < k\leq n}P(A_{n,i}\cap A_{n,j}\cap A_{n,k}) + \cdots\\
+&= \sum_{J \subseteq \{1, ..., n\}}^{J \ne \phi}(-1)^{|J| + 1}\left(1 - \sum_{j \in J} p_j\right)^{n}\\
+\end{aligned}$$
 参考链接：http://www.json.org/json-zh.html
 
 想要完成的目标：
