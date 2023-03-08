@@ -12,11 +12,11 @@
 例如：number的词法分析，BNF范式给出如下：
 
 $$
-\begin{split}
+\begin{align}
 & <number>::= ['-']\ int\ [ frac ]\ [ exp ]\\
 & <int>::= '0'\ |\ ([1-9][0-9]^{*}) \\
 & <exp>::= ('e'|'E')\ ['-' | '+']\ [0-9]^{+}
-\end{split} 
+\end{align} 
 $$
 
 参考链接：http://www.json.org/json-zh.html
