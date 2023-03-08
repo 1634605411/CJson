@@ -11,15 +11,6 @@
 
 例如：number的词法分析，BNF范式给出如下：
 
-$$ 
-\begin{split}
-& <number>::= ['-']\ int\ [ frac ]\ [ exp ]\\
-& <int>::= '0'\ |\ ([1-9][0-9]^{*}) \\
-& <exp>::= ('e'|'E')\ ['-' | '+']\ [0-9]^{+}
-\end{split} 
-$$ 
-
-
 $$
 \begin{split}
 & <number>::= ['-']\ int\ [ frac ]\ [ exp ]\\
@@ -27,7 +18,7 @@ $$
 & <exp>::= ('e'|'E')\ ['-' | '+']\ [0-9]^{+}
 \end{split} 
 $$
-  
+
 参考链接：http://www.json.org/json-zh.html
 
 想要完成的目标：
