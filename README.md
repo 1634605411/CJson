@@ -9,11 +9,21 @@
 6. 解决object的解析问题 
 7. 解决json的输出问题 
 
+例如：number的词法分析，BNF范式给出如下：
+$$
+\begin{split}
+& <number>::= ['-']\ int\ [ frac ]\ [ exp ]\\
+& <int>::= '0'\ |\ ([1-9][0-9]^{*}) \\
+& <exp>::= ('e'|'E')\ ['-' | '+']\ [0-9]^{+}
+\end{split} 
+$$
 
-http://www.json.org/json-zh.html
+参考链接：http://www.json.org/json-zh.html
+
 想要完成的目标：
 * 完成Json的识别和存储
 * 实现Json格式的美化输出
 * 完成多格式的转换，如Json和XML的转换
 * 输出潜在的错误位置
+* 随机Json生成器
 * ...
