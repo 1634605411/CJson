@@ -10,6 +10,7 @@
 7. 解决json的输出问题 
 
 例如：number的词法分析，BNF范式给出如下：
+
 $$
 \begin{split}
 & <number>::= ['-']\ int\ [ frac ]\ [ exp ]\\
@@ -17,7 +18,9 @@ $$
 & <exp>::= ('e'|'E')\ ['-' | '+']\ [0-9]^{+}
 \end{split} 
 $$
+The Cauchy-Schwarz Inequality
 
+$$\left( \sum_{k=1}^n a_k b_k \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right)$$
 参考链接：http://www.json.org/json-zh.html
 
 想要完成的目标：
