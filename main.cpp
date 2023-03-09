@@ -23,12 +23,24 @@ using namespace std;
 //报错还没写
 //还想写个查找功能
 //再修改一下到真正的状态机
+
+
 namespace Json {
+	string json_str;
+	int now_pos = 0;
+	char Jsonget() {
+		return json_str[now_pos++];
+	}
+	char Jsonpeek() {
+		if (now_pos == (int)json_str.size())return -1;
+		return json_str[now_pos];
+	}
 	class pointer {
 		public:
 			int type;
 			int pos;
-	}root;
+	} root;
+	//root node
 	class Object {
 		public:
 			vector<pair<pointer, pointer>>v;
@@ -44,7 +56,10 @@ namespace Json {
 	vector<Object>vec_Object;
 	vector<bool>vec_Bool;
 	vector<Array>vec_Array;
+
 	void erase() {
+		json_str.erase();
+		now_pos = 0;
 		vec_String.clear();
 		vec_Number_int.clear();
 		vec_Number_dou.clear();
@@ -57,11 +72,11 @@ namespace Json {
 	pointer parse_Object();
 	pointer parse_value();
 
-	pointer parse_num() {//这里还有bug
+	pointer parse_num() {//不是严格LL1的感觉
 		string s;
-		//cout<<"peek="<<(char)cin.peek()<<endl;;
-		while (isdigit(cin.peek()) || cin.peek() == 'e' || cin.peek() == '-' || cin.peek() == '+' || cin.peek() == '.') {
-			s.push_back(cin.get());
+		//cout<<"peek="<<(char)Jsonpeek()<<endl;;
+		while (isdigit(Jsonpeek()) || Jsonpeek() == 'e' || Jsonpeek() == '-' || Jsonpeek() == '+' || Jsonpeek() == '.') {
+			s.push_back(Jsonget());
 		}
 		if (count(s.begin(), s.end(), '.') || count(s.begin(), s.end(), 'e')) {
 			//cout<<"s="<<s<<endl;
@@ -92,16 +107,16 @@ namespace Json {
 	}
 	pointer parse_str() {
 		string str_tmp;
-		cin.get();
+		Jsonget();
 		char c;
 		//可能开销会很大，之后看一下能不能优化
-		//	原本是 while ((cin.peek() != -1) && (c = cin.get()) != '\"') {
-		while ( cin.peek() != -1) {
-			c = cin.get();
+		//	原本是 while ((Jsonpeek() != -1) && (c = Jsonget()) != '\"') {
+		while ( Jsonpeek() != -1) {
+			c = Jsonget();
 			//if语句可以修成switch语句
 			//相同功能的可以合并
 			if (c == '\\') {
-				c = cin.get();
+				c = Jsonget();
 				if (c == '\"') {
 					str_tmp += c;
 				} else if (c == '\\') {
@@ -121,7 +136,7 @@ namespace Json {
 				} else if (c == 'u') {
 					char hex[4];//命名换一下
 					for (int i = 0; i < 4; i++) {
-						hex[i] = cin.get();
+						hex[i] = Jsonget();
 					}
 					str_tmp += UnicodeToAscii(hex);
 				}
@@ -131,6 +146,8 @@ namespace Json {
 				return {STR, (int)vec_String.size() - 1};
 			} else {
 				str_tmp += c;
+				//cout<<"str="<<str_tmp<<endl;
+				//cout<<"c="<<(int)c<<endl;
 			}
 		}
 		//先加一个退出的地方
@@ -141,35 +158,35 @@ namespace Json {
 		//除了string内部其他应该都能进行空白分析
 		//还有很多种情况 比如空格 换行等 之后再看一下json文件
 		//本来是if
-		while (cin.peek() == ' ' || cin.peek() == '\n' || cin.peek() == '\t') {
-			cin.get();
+		while (Jsonpeek() == ' ' || Jsonpeek() == '\n' || Jsonpeek() == '\t') {
+			Jsonget();
 		}
 	}
 	pointer parse_arr() {//还没写
 		Array arr;
-		cin.get();//吃掉  '['
-		while (cin.peek() != ']') {
+		Jsonget();//吃掉  '['
+		while (Jsonpeek() != ']') {
 			parse_whitespace();
 			arr.ary.push_back(parse_value());
 			parse_whitespace();
-			if (cin.peek() == ',') {
-				cin.get();
+			if (Jsonpeek() == ',') {
+				Jsonget();
 			}
 		}
-		cin.get();
+		Jsonget();
 		vec_Array.push_back(arr);
 		return {ARR, (int)vec_Array.size() - 1};
 
 	};
 	pointer parse_bool() {//还没写
 		parse_whitespace();
-		if (cin.peek() == 'f') {
+		if (Jsonpeek() == 'f') {
 			// false
-			for (int i = 0; i < 5; i++) cin.get();
+			for (int i = 0; i < 5; i++) Jsonget();
 			vec_Bool.push_back(0);
 		} else {
 			// true
-			for (int i = 0; i < 4; i++) cin.get();
+			for (int i = 0; i < 4; i++) Jsonget();
 			vec_Bool.push_back(1);
 		}
 		parse_whitespace();
@@ -178,14 +195,14 @@ namespace Json {
 	pointer parse_value() {
 		parse_whitespace();
 		//cout << "YES" << endl;
-		while (cin.peek() != -1) {
-			if (cin.peek() == '"') {//所有的'"'都要注意一下,可能不用转义符
+		while (Jsonpeek() != -1) {
+			if (Jsonpeek() == '"') {//所有的'"'都要注意一下,可能不用转义符
 				return parse_str();
-			} else if (cin.peek() == 'f' || cin.peek() == 't' || cin.peek() == 'n') {
+			} else if (Jsonpeek() == 'f' || Jsonpeek() == 't' || Jsonpeek() == 'n') {
 				return parse_bool();
-			} else if (cin.peek() == '[') {
+			} else if (Jsonpeek() == '[') {
 				return parse_arr();
-			} else if (cin.peek() == '{') {
+			} else if (Jsonpeek() == '{') {
 				return parse_Object();
 			} else {
 				return parse_num();
@@ -196,20 +213,20 @@ namespace Json {
 	}
 	pointer parse_Object() {
 		Object obj;
-		cin.get();
+		Jsonget();
 		//obj.type = DICT;
-		while (cin.peek() != '}') {
+		while (Jsonpeek() != '}') {
 			parse_whitespace();
 			//不一定要加
 			pointer p1 = parse_str();
 			parse_whitespace();
-			cin.get();
+			Jsonget();
 			parse_whitespace();
 			pointer p2 = parse_value();
 			obj.v.push_back({p1, p2});
-			while (cin.peek() != '}' && (cin.peek() == ' ' || cin.peek() == '\t' || cin.peek() == '\n' || cin.peek() == ','))cin.get();
+			while (Jsonpeek() != '}' && (Jsonpeek() == ' ' || Jsonpeek() == '\t' || Jsonpeek() == '\n' || Jsonpeek() == ','))Jsonget();
 		}
-		cin.get();
+		Jsonget();
 		parse_whitespace();
 		vec_Object.push_back(obj);
 		return {OBJ, (int)vec_Object.size() - 1};
@@ -255,17 +272,26 @@ namespace Json {
 }
 using namespace Json;
 int main() {
+	//读取部分 可以写成一个函数
+	//注意test改成ANSI编码,无法正常解析UTF-8格式的中文 
 	freopen("test.txt", "r", stdin);
-	//cin.peek()查看后一个字符，但是实际推动
+	string tmp;
+	while (getline(cin, tmp)) {
+		json_str += tmp;
+		if (Jsonpeek() != -1) //Jsonpeek()检测是否读到文件尾
+			json_str += '\n';
+	}
+
 	parse_whitespace();
 	//json格式可能不是一个对象，也可能是值
-	while (cin.peek() != -1) {
-		if (cin.peek() == '{') {//所有的'"'都要注意一下,可能不用转义符
+	while (Jsonpeek() != -1) {
+		if (Jsonpeek() == '{') {//所有的'"'都要注意一下,可能不用转义符
 			root = parse_Object();
 		} else {
 			root = parse_value();
 		}
 	}
+
 	//pointer point = parse_Object();
 	//cout << "type=" << point.type << " pos=" << point.pos << endl;
 	print(root);

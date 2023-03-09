@@ -9,6 +9,10 @@
 6. 解决object的解析问题 
 7. 解决json的输出问题 
 
+注意：如果想要完成中文的解析，请将txt修改为ANSI编码。如果是UTF-8编码会无法正常识别中文字符。
+
+![Alt text](./pic/encode.png)
+
 例如：number的词法分析，BNF范式给出如下：
 
 $$
